@@ -12,7 +12,8 @@ logger = logging.getLogger("camara-mcp-server")
 
 mcp = FastMCP("camara-mcp-server")
 
-# Tool: Get catalog
+
+#Tool: Get catalog
 @mcp.tool()
 def get_catalog():
     """Retrieve the service catalog from the Flask API."""
@@ -26,7 +27,41 @@ def get_catalog():
         logger.error("Error in get_catalog: %s", e, exc_info=True)
         return {"error": str(e)}
 
-# Tool: Get device location
+
+
+# Shared function to fetch catalog
+def _fetch_catalog():
+    """Internal helper to fetch catalog from Flask API."""
+    try:
+        resp = requests.get("http://localhost:5000/catalog", timeout=5)
+        resp.raise_for_status()
+        return {
+            "status": "success",
+            "catalog": resp.json()
+        }
+    except Exception as e:
+        logger.error("Error fetching catalog: %s", e, exc_info=True)
+        return {
+            "status": "error",
+            "message": str(e)
+        }
+
+# Resource: Service catalog (read-only reference)
+@mcp.resource("resource://service_catalog")
+def service_catalog():
+    """Available CAMARA services and their metadata."""
+    logger.debug("Browsing service_catalog resource")
+    return _fetch_catalog()
+
+# Tool: Get catalog (explicit refresh)
+@mcp.tool()
+def get_catalog():
+    """Retrieve the service catalog from the Flask API (live)."""
+    logger.debug("Invoking get_catalog() tool")
+    return _fetch_catalog()
+
+
+# Get device location
 @mcp.tool()
 def get_device_location(deviceId: str):
     """Retrieve device location."""
@@ -39,6 +74,7 @@ def get_device_location(deviceId: str):
     except Exception as e:
         logger.error("Error in get_device_location: %s", e, exc_info=True)
         return {"error": str(e)}
+
 
 # Tool: QoD session
 @mcp.tool()
@@ -58,6 +94,7 @@ def get_qod_session(imsi: str, pduSession: str):
         logger.error("Error in get_qod_session: %s", e, exc_info=True)
         return {"error": str(e)}
 
+
 # Tool: Send SMS
 @mcp.tool()
 def send_sms(to: str, content: str):
@@ -71,6 +108,7 @@ def send_sms(to: str, content: str):
     except Exception as e:
         logger.error("Error in send_sms: %s", e, exc_info=True)
         return {"error": str(e)}
+
 
 # Tool: Check reachability
 @mcp.tool()
@@ -86,19 +124,22 @@ def check_reachability(deviceId: str):
         logger.error("Error in check_reachability: %s", e, exc_info=True)
         return {"error": str(e)}
 
+
 # Tool: Verify number
 @mcp.tool()
 def verify_number(phoneNumber: str):
     """Verify a phone number."""
     logger.debug("Invoking verify_number with phoneNumber=%s", phoneNumber)
     try:
-        resp = requests.get("http://localhost:5000/apis/number-verification/v1/verify", params={"phoneNumber": phoneNumber})
+        resp = requests.get("http://localhost:5000/apis/number-verification/v1/verify",
+                            params={"phoneNumber": phoneNumber})
         resp.raise_for_status()
         logger.debug("Response: %s", resp.json())
         return resp.json()
     except Exception as e:
         logger.error("Error in verify_number: %s", e, exc_info=True)
         return {"error": str(e)}
+
 
 if __name__ == "__main__":
     logger.info("Starting MCP server on camara-mcp-server")
