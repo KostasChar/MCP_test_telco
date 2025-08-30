@@ -32,5 +32,6 @@ This repository contains a **dummy telco backend** and a **FastMCP server** that
 ---
 ## Demo
 
-![me](C:\Users\kchar\PycharmProjects\mcptest123\camara_demo_test.gif)
+![me](https://github.com/KostasChar/MCP_test_telco/blob/main/camara_demo_test.gif)
+
 
