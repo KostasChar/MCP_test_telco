@@ -34,4 +34,5 @@ This repository contains a **dummy telco backend** and a **FastMCP server** that
 
 ![me](https://github.com/KostasChar/MCP_test_telco/blob/main/camara_demo_test.gif)
 
-
+## MCP Server Testing 
+[MCP Inspector](https://modelcontextprotocol.io/legacy/tools/inspector)
