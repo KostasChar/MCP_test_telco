@@ -4,7 +4,10 @@ from datetime import datetime, timezone
 
 app = Flask(__name__)
 
-# Example service catalog following CAMARA API style
+# --- In-memory data stores ---
+qod_sessions = {}
+
+# --- Service catalog (CAMARA-style) ---
 service_catalog = {
     "services": [
         {
@@ -23,13 +26,25 @@ service_catalog = {
         {
             "serviceId": "quality-on-demand",
             "name": "Quality on Demand",
-            "description": "Allows requesting network QoS information for specific sessions.",
+            "description": "QoD session lifecycle management APIs.",
             "apis": [
                 {
+                    "apiName": "Create QoD Session",
+                    "endpoint": "/apis/quality-on-demand/v1/sessions",
+                    "method": "POST",
+                    "description": "Create a new QoD session."
+                },
+                {
                     "apiName": "Get QoD Session",
-                    "endpoint": "/apis/quality-on-demand/v1/session",
+                    "endpoint": "/apis/quality-on-demand/v1/sessions/{sessionId}",
                     "method": "GET",
-                    "description": "Retrieve QoS information for a specific IMSI and PDU session."
+                    "description": "Retrieve an existing QoD session."
+                },
+                {
+                    "apiName": "Delete QoD Session",
+                    "endpoint": "/apis/quality-on-demand/v1/sessions/{sessionId}",
+                    "method": "DELETE",
+                    "description": "Release an existing QoD session."
                 }
             ]
         },
@@ -41,7 +56,7 @@ service_catalog = {
                 {
                     "apiName": "Send SMS",
                     "endpoint": "/apis/sms-messaging/v1/send",
-                    "method": "GET",
+                    "method": "POST",
                     "description": "Send an SMS message to a device."
                 }
             ]
@@ -75,58 +90,103 @@ service_catalog = {
     ]
 }
 
-qod_sessions = {}
-timestamp = datetime.now(timezone.utc).isoformat()
 
+# --- Helpers ---
+def current_time():
+    return datetime.now(timezone.utc).isoformat()
+
+
+# --- Service Catalog API ---
 @app.route("/catalog", methods=["GET"])
 def get_catalog():
-    """Return the service catalog."""
     return jsonify(service_catalog), 200
 
 
+# --- Device Location API ---
 @app.route("/apis/device-location/v1/location", methods=["GET"])
 def get_device_location():
-    """Simulated device location API."""
     device_id = request.args.get("deviceId", "unknown")
     location = {
         "deviceId": device_id,
         "latitude": 37.7749,
         "longitude": -122.4194,
-        "timestamp": timestamp
+        "timestamp": current_time()
     }
     return jsonify(location), 200
 
 
-@app.route("/apis/quality-on-demand/v1/session", methods=["GET"])
-def get_qod_session():
-    """Return a simulated QoD session for IMSI and PDU session."""
-    imsi = request.args.get("imsi")
-    pdu_session = request.args.get("pduSession")
-    qos_profile = request.args.get("qosProfile", "standard")
-
-    if not imsi or not pdu_session:
-        return jsonify({"error": "Missing required parameters: imsi and pduSession"}), 400
+# --- Quality on Demand (QoD) APIs ---
+@app.route("/apis/quality-on-demand/v1/sessions", methods=["POST"])
+def create_qod_session():
+    data = request.get_json() or {}
+    phone_number = data.get("phoneNumber", "123456789")
+    qos_profile = data.get("qosProfile", "QCI_1_voice")
 
     qos_session = {
-        "imsi": imsi,
-        "pduSession": pdu_session,
+        "sessionId": str(uuid.uuid4()),
+        "duration": 86400,
+        "device": {
+            "phoneNumber": phone_number,
+            "networkAccessIdentifier": f"{phone_number}@domain.com",
+            "ipv4Address": {
+                "publicAddress": "84.125.93.10",
+                "publicPort": 59765
+            },
+            "ipv6Address": "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+        },
+        "applicationServer": {
+            "ipv4Address": "192.168.0.1/24",
+            "ipv6Address": "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+        },
+        "devicePorts": {
+            "ranges": [{"from": 5010, "to": 5020}],
+            "ports": [5060, 5070]
+        },
+        "applicationServerPorts": {
+            "ranges": [{"from": 5010, "to": 5020}],
+            "ports": [5060, 5070]
+        },
         "qosProfile": qos_profile,
-        "bandwidth": "100Mbps" if qos_profile == "premium" else "20Mbps",
-        "latency": "2ms" if qos_profile == "premium" else "5ms",
+        "webhook": {
+            "notificationUrl": "https://application-server.com",
+            "notificationAuthToken": "c8974e592c2fa383d4a3960714"
+        },
         "status": "active",
-        "timestamp": datetime.utcnow().isoformat() + "Z"
+        "createdAt": current_time()
     }
 
+    # Optional: store in memory if you want GET/DELETE later
+    qod_sessions[qos_session["sessionId"]] = qos_session
     return jsonify(qos_session), 200
 
 
-@app.route("/apis/sms-messaging/v1/send", methods=["GET"])
+
+@app.route("/apis/quality-on-demand/v1/sessions/<session_id>", methods=["GET"])
+def get_qod_session(session_id):
+    session = qod_sessions.get(session_id)
+    if not session:
+        return jsonify({"error": "QoD session not found"}), 404
+    return jsonify(session), 200
+
+
+@app.route("/apis/quality-on-demand/v1/sessions/<session_id>", methods=["DELETE"])
+def delete_qod_session(session_id):
+    session = qod_sessions.pop(session_id, None)
+    if not session:
+        return jsonify({"error": "QoD session not found"}), 404
+    session["status"] = "released"
+    session["releasedAt"] = current_time()
+    return jsonify(session), 200
+
+
+# --- SMS Messaging API ---
+@app.route("/apis/sms-messaging/v1/send", methods=["POST"])
 def send_sms():
-    """Simulated SMS send API."""
-    to_number = request.args.get("to")
-    content = request.args.get("content")
+    data = request.get_json() or {}
+    to_number = data.get("to")
+    content = data.get("content")
     sms_response = {
-        "messageId": "msg123",
+        "messageId": str(uuid.uuid4()),
         "to": to_number,
         "content": content,
         "status": "delivered"
@@ -134,27 +194,27 @@ def send_sms():
     return jsonify(sms_response), 200
 
 
+# --- Device Reachability API ---
 @app.route("/apis/device-reachability/v1/check", methods=["GET"])
 def check_reachability():
-    """Simulated device reachability API."""
-    device_id = request.args.get("deviceId")
+    device_id = request.args.get("deviceId", "unknown")
     reachability = {
         "deviceId": device_id,
         "reachable": True,
-        "checkedAt": timestamp
+        "checkedAt": current_time()
     }
     return jsonify(reachability), 200
 
 
+# --- Number Verification API ---
 @app.route("/apis/number-verification/v1/verify", methods=["GET"])
 def verify_number():
-    """Simulated number verification API."""
-    phone_number = request.args.get("phoneNumber")
+    phone_number = request.args.get("phoneNumber", "unknown")
     verification = {
         "phoneNumber": phone_number,
         "verified": True,
         "method": "sms-otp",
-        "verifiedAt": timestamp
+        "verifiedAt": current_time()
     }
     return jsonify(verification), 200
 
