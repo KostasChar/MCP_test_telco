@@ -96,9 +96,9 @@ def verify_number(phoneNumber: str):
 if __name__ == "__main__":
     logger.info("Starting MCP server on camara-mcp-server")
     try:
-     mcp.run(transport="stdio")
+    #mcp.run(transport="stdio")
 
-    #mcp.run(transport="streamable-http")
+      mcp.run(transport="streamable-http")
     except Exception as e:
         logger.critical("MCP server crashed: %s", e, exc_info=True)
 

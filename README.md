@@ -29,6 +29,7 @@ This repository contains a **dummy telco backend** and a **FastMCP server** that
    
 3. **MCP Client (Claude Desktop)**  
    - Use **Claude Desktop** as the MCP client to call the tools exposed by `mcp_server.py`.
+   - Streamlit Web UI - 
 ---
 ## Demo
 
