@@ -23,7 +23,7 @@ This repository contains a **dummy telco backend** and a **FastMCP server** that
      - Number verification
    
    - Connexion 3.x (ASGI / Starlette-based OpenAPI server)
-     -  Swagger UI → http://localhost:5000/ui/
+     -  Swagger UI → http://127.0.0.1:5000/ui/
 
 2. **MCP Server (`mcp_server.py`)**  
    - Wraps the dummy backend as MCP tools using `FastMCP`.
