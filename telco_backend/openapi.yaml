@@ -1,0 +1,111 @@
+openapi: 3.0.3
+info:
+  title: Telco Services API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5000
+
+paths:
+  /catalog:
+    get:
+      operationId: controllers.catalog_controller.get_catalog
+      summary: Get service catalog
+      responses:
+        "200":
+          description: Service catalog
+
+  /apis/device-location/v1/location:
+    get:
+      operationId: controllers.device_controller.get_device_location
+      parameters:
+        - name: deviceId
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Device location
+
+  /apis/quality-on-demand/v1/sessions:
+    post:
+      operationId: controllers.qod_controller.create_qod_session
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: QoD session created
+
+  /apis/quality-on-demand/v1/sessions/{sessionId}:
+    get:
+      operationId: controllers.qod_controller.get_qod_session
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: QoD session details
+        "404":
+          description: Not found
+    delete:
+      operationId: controllers.qod_controller.delete_qod_session
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: QoD session released
+        "404":
+          description: Not found
+
+  /apis/sms-messaging/v1/send:
+    post:
+      operationId: controllers.sms_controller.send_sms
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                to:
+                  type: string
+                content:
+                  type: string
+      responses:
+        "200":
+          description: SMS sent
+
+  /apis/device-reachability/v1/check:
+    get:
+      operationId: controllers.device_controller.check_reachability
+      parameters:
+        - name: deviceId
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Device reachability
+
+  /apis/number-verification/v1/verify:
+    get:
+      operationId: controllers.verification_controller.verify_number
+      parameters:
+        - name: phoneNumber
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Number verification

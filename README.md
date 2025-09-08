@@ -14,20 +14,22 @@ This repository contains a **dummy telco backend** and a **FastMCP server** that
 
 ## Overview
 
-1. **Dummy Telco Backend (`dummy_telco_backend.py`)**  
+1. **Telco Backend (`telco_backend`)**  
    - Provides simulated telco services including:
      - Device Location
      - Quality-on-Demand (QoD) sessions
      - SMS messaging
      - Device reachability
      - Number verification
-   - Implemented in Flask, returns static or simulated data.
+   
+   - Connexion 3.x (ASGI / Starlette-based OpenAPI server)
+     -  Swagger UI → http://localhost:5000/ui/
 
 2. **MCP Server (`mcp_server.py`)**  
    - Wraps the dummy backend as MCP tools using `FastMCP`.
    - Tools allow retrieval of catalog, device location, QoD sessions, SMS sending, reachability checks, and number verification.
-   
-3. **MCP Client (Claude Desktop)**  
+      - Streamable HTTP API: http://127.0.0.1:8000
+3. **MCP Host / AI assistant (Claude Desktop)**  
    - Use **Claude Desktop** as the MCP client to call the tools exposed by `mcp_server.py`.
    - Streamlit Web UI - 
 ---
