@@ -14,7 +14,7 @@ This repository contains a **dummy telco backend** and a **FastMCP server** that
 
 ## Overview
 
-1. **Telco Backend (`telco_backend`)**  
+1. **Telco Backend (`Telco_backend`)**  
    - Provides simulated telco services including:
      - Device Location
      - Quality-on-Demand (QoD) sessions
@@ -33,7 +33,15 @@ This repository contains a **dummy telco backend** and a **FastMCP server** that
 3. **MCP Host / AI assistant (Claude Desktop)**  
    - Use **Claude Desktop** as the MCP client to call the tools exposed by `MCP_server`.
    - Streamlit Web UI & MCP Client & Ollama - (`AI_Assistant`)
+     - Install Ollama locally 
 ---
+## How to Run
+   - Telco_backend and MCP_server: python app.py
+   - MCP Host / AI Assistant
+     - Custom AI_assistant: streamlit run app.py
+     - Claude Desktop: edit_claude_desktop_config.json
+       - Use stdio connectivity with MCP server, in case of Streamable HTTP API errors 
+
 ## Demo
 
 ![me](https://github.com/KostasChar/MCP_test_telco/blob/main/camara_demo_test.gif)
