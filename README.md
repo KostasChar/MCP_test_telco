@@ -25,13 +25,14 @@ This repository contains a **dummy telco backend** and a **FastMCP server** that
    - Connexion 3.x (ASGI / Starlette-based OpenAPI server)
      -  Swagger UI → http://127.0.0.1:5000/ui/
 
-2. **MCP Server (`mcp_server.py`)**  
+2. **MCP Server (`MCP_server`)**  
    - Wraps the dummy backend as MCP tools using `FastMCP`.
    - Tools allow retrieval of catalog, device location, QoD sessions, SMS sending, reachability checks, and number verification.
       - Streamable HTTP API: http://127.0.0.1:8000
+     
 3. **MCP Host / AI assistant (Claude Desktop)**  
-   - Use **Claude Desktop** as the MCP client to call the tools exposed by `mcp_server.py`.
-   - Streamlit Web UI - 
+   - Use **Claude Desktop** as the MCP client to call the tools exposed by `MCP_server`.
+   - Streamlit Web UI & MCP Client & Ollama - (`AI_Assistant`)
 ---
 ## Demo
 
