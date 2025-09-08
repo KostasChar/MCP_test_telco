@@ -39,8 +39,14 @@ This repository contains a **dummy telco backend** and a **FastMCP server** that
    - Telco_backend and MCP_server: python app.py
    - MCP Host / AI Assistant
      - Custom AI_assistant: streamlit run app.py
-     - Claude Desktop: edit_claude_desktop_config.json
+     - [Claude Desktop](https://claude.ai/download): edit_claude_desktop_config.json
        - Use stdio connectivity with MCP server, in case of Streamable HTTP API errors 
+     -  [Open WebUI](https://openwebui.com/): Open WebUI is an extensible, feature-rich, and user-friendly self-hosted AI platform designed to operate entirely offline.
+        - [mcpo](https://github.com/open-webui/mcpo): Expose any MCP tool as an OpenAPI-compatible HTTP server—instantly.
+          - e.g. `mcpo --port 8001 --api-key "top-secret" --server-type "streamable-http" -- http://127.0.0.1:8000/mcp`
+
+
+
 
 ## Demo
 
