@@ -44,7 +44,7 @@ This repository contains a **dummy telco backend** and a **FastMCP server** that
      -  [Open WebUI](https://openwebui.com/): Open WebUI is an extensible, feature-rich, and user-friendly self-hosted AI platform designed to operate entirely offline.
         - [mcpo](https://github.com/open-webui/mcpo): Expose any MCP tool as an OpenAPI-compatible HTTP server—instantly.
           - e.g. `mcpo --port 8001 --api-key "top-secret" --server-type "streamable-http" -- http://127.0.0.1:8000/mcp`
-
+     -  [Cherry Studio](https://www.cherry-ai.com/)
 
 
 
