@@ -17,4 +17,4 @@ def create_app():
 if __name__ == "__main__":
     cnx_app = create_app()
     # This runs the underlying Flask app
-    cnx_app.run(host="0.0.0.0", port=5000)
+    cnx_app.run(host="0.0.0.0", port=5020)

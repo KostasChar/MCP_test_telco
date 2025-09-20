@@ -34,9 +34,13 @@ This repository contains a **dummy telco backend** and a **FastMCP server** that
    - Use **Claude Desktop** as the MCP client to call the tools exposed by `MCP_server`.
    - Streamlit Web UI & MCP Client & Ollama - (`AI_Assistant`)
      - Install Ollama locally 
+
+4. **HTTP Backend (to be integrated with custom front-ends)**
+   - Custom MCP agent that has tool access based on mcp-use library.
+   - Streaming - ongoing conversations/streams → needs async loop (Quart).
 ---
 ## How to Run
-   - Telco_backend and MCP_server: python app.py
+   - Telco_backend and MCP_server: python app.py and python mcp_server.py
    - MCP Host / AI Assistant
      - Custom AI_assistant: streamlit run app.py
      - [Claude Desktop](https://claude.ai/download): edit_claude_desktop_config.json
@@ -45,6 +49,7 @@ This repository contains a **dummy telco backend** and a **FastMCP server** that
         - [mcpo](https://github.com/open-webui/mcpo): Expose any MCP tool as an OpenAPI-compatible HTTP server—instantly.
           - e.g. `mcpo --port 8001 --api-key "top-secret" --server-type "streamable-http" -- http://127.0.0.1:8000/mcp`
      -  [Cherry Studio](https://www.cherry-ai.com/)
+     - UI-Backend: python backend.py
 
 
 
