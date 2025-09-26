@@ -1,0 +1,205 @@
+openapi: 3.0.3
+info:
+  title: Dummy API for Camara experimentation
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+
+  /sessions:
+    post:
+      summary: Create a new QoS session
+      operationId: controllers.qod_controller.create_session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                device:
+                  type: object
+                  properties:
+                    phoneNumber:
+                      type: string
+                    networkAccessIdentifier:
+                      type: string
+                    ipv4Address:
+                      type: object
+                      properties:
+                        publicAddress:
+                          type: string
+                        publicPort:
+                          type: integer
+                    ipv6Address:
+                      type: string
+                      nullable: true
+                applicationServer:
+                  type: object
+                  properties:
+                    ipv4Address:
+                      type: string
+                    ipv6Address:
+                      type: string
+                      additionalProperties: true
+                devicePorts:
+                  type: object
+                  properties:
+                    ranges:
+                      type: array
+                      items:
+                        type: integer
+                    ports:
+                      type: array
+                      items:
+                        type: integer
+                applicationServerPorts:
+                  type: object
+                  properties:
+                    ranges:
+                      type: array
+                      items:
+                        type: integer
+                    ports:
+                      type: array
+                      items:
+                        type: integer
+                qosProfile:
+                  type: string
+                sink:
+                  type: string
+                sinkCredential:
+                  type: object
+                  properties:
+                    credentialType:
+                      type: string
+                duration:
+                  type: integer
+              example:
+                device:
+                  phoneNumber: "+123456789"
+                  networkAccessIdentifier: "123456789@domain.com"
+                  ipv4Address: {
+                    "publicAddress": "203.0.113.0",
+                    "publicPort": 59765
+                     }
+                  ipv6Address: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+                applicationServer:
+                  ipv4Address: "198.51.100.0/24"
+                  ipv6Address: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+                devicePorts:
+                  ranges: []
+                  ports: []
+                applicationServerPorts:
+                  ranges: []
+                  ports: []
+                qosProfile: "voice"
+                sink: "https://endpoint.example.com/sink"
+                sinkCredential:
+                  credentialType: "PLAIN"
+                duration: 3600
+      responses:
+        "201":
+          description: Successful session creation
+          content:
+            application/json:
+              example:
+                sessionId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                applicationServer:
+                  ipv4Address: "198.51.100.0/24"
+                qosProfile: "QOS_L"
+                sink: "https://application-server.com/notifications"
+                duration: 3600
+                qosStatus: "REQUESTED"
+
+  /sessions/{sessionId}:
+    get:
+      summary: Get QoS session information
+      operationId: controllers.qod_controller.get_session
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: QoS session information
+          content:
+            application/json:
+              example:
+                sessionId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                duration: 3600
+                applicationServer:
+                  ipv4Address: "198.51.100.0/24"
+                qosProfile: "QOS_L"
+                sink: "https://application-server.com/notifications"
+                startedAt: "2024-06-01T12:00:00Z"
+                expiresAt: "2024-06-01T13:00:00Z"
+                qosStatus: "AVAILABLE"
+    delete:
+      summary: Delete a QoS session
+      operationId: controllers.qod_controller.delete_session
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Session deleted
+
+  /verify:
+    post:
+      summary: Verify if a device is within a specified area
+      operationId: controllers.verify_controller.verify_device_location
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                device:
+                  type: object
+                  properties:
+                    phoneNumber:
+                      type: string
+                area:
+                  type: object
+                  properties:
+                    areaType:
+                      type: string
+                      enum: [CIRCLE]
+                    center:
+                      type: object
+                      properties:
+                        latitude:
+                          type: number
+                        longitude:
+                          type: number
+                    radius:
+                      type: number
+                maxAge:
+                  type: integer
+              example:
+                device:
+                  phoneNumber: "+123456789"
+                area:
+                  areaType: "CIRCLE"
+                  center:
+                    latitude: 50.735851
+                    longitude: 7.10066
+                  radius: 50000
+                maxAge: 120
+      responses:
+        "200":
+          description: Verification result
+          content:
+            application/json:
+              example:
+                verificationResult: "TRUE"
+                lastLocationTime: "2023-09-07T10:40:52Z"
