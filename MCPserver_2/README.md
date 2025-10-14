@@ -27,4 +27,5 @@
 
 8. **Return typed Pydantic object to client/internal call**  
    - Downstream code can safely access `response.sessionId` and `response.qosStatus` without manual JSON parsing.
+---
 

@@ -6,6 +6,7 @@ from MCPserver_2.models.qod_models import *
 import os
 from dotenv import load_dotenv
 
+##
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("MCP server")

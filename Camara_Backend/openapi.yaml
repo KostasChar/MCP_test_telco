@@ -22,10 +22,13 @@ paths:
                   properties:
                     phoneNumber:
                       type: string
+                      nullable: true
                     networkAccessIdentifier:
                       type: string
+                      nullable: true
                     ipv4Address:
                       type: object
+                      nullable: true
                       properties:
                         publicAddress:
                           type: string
