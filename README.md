@@ -36,8 +36,9 @@ This repository contains a **dummy telco backend** and a **FastMCP server** that
      - Install Ollama locally 
 
 4. **HTTP Backend (to be integrated with custom front-ends)**
-   - Custom MCP agent that has tool access based on mcp-use library.
+   - Custom MCP agent that has tool access based on mcp-use library (leverages http-streamable for mcp communication).
    - Streaming - ongoing conversations/streams → needs async loop (Quart).
+     - Supports also SSE endpoints 
 ---
 ## How to Run
    - Telco_backend and MCP_server: python app.py and python mcp_server.py
@@ -49,7 +50,7 @@ This repository contains a **dummy telco backend** and a **FastMCP server** that
         - [mcpo](https://github.com/open-webui/mcpo): Expose any MCP tool as an OpenAPI-compatible HTTP server—instantly.
           - e.g. `mcpo --port 8001 --api-key "top-secret" --server-type "streamable-http" -- http://127.0.0.1:8000/mcp`
      -  [Cherry Studio](https://www.cherry-ai.com/)
-     - UI-Backend: python backend.py
+     - UI-Backend: python backend.py 
 
 
 
