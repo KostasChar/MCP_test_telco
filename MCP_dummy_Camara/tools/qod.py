@@ -2,7 +2,7 @@ import json
 import logging
 import requests
 from pathlib import Path
-from MCPserver_2.models.qod_models import *
+from MCP_dummy_Camara.models.qod_models import *
 import os
 from dotenv import load_dotenv
 
