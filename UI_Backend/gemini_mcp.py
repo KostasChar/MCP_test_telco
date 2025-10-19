@@ -7,7 +7,7 @@ from mcp_use import MCPAgent, MCPClient
 load_dotenv()
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-MODEL_NAME = os.getenv("MODEL_NAME")
+MODEL_NAME = os.getenv("GEMINI_MODEL_NAME")
 MCP_SERVER_URL = os.getenv("MCP_SERVER_URL")
 
 if not GOOGLE_API_KEY:

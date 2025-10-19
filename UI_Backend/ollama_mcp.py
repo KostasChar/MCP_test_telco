@@ -7,7 +7,7 @@ from mcp_use import MCPAgent, MCPClient
 load_dotenv()
 
 # Env variables
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL_NAME")
 MCP_SERVER_URL = os.getenv("MCP_SERVER_URL")
 
 # Validation
