@@ -33,7 +33,7 @@ async def create_qod_session(inp: CreateQoDSessionInput) -> QoDSessionMinimalRes
         logger.error("Template file qod_request.json not found")
         raise FileNotFoundError("qod_request.json not found")
 
-    with open(json_path, "r") as f:
+    with open(json_path, "r", encoding="utf-8") as f:
         template = json.load(f)
 
     # Merge inputs into the template
