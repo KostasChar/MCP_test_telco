@@ -2,7 +2,6 @@ import logging
 from mcp.server.fastmcp import FastMCP
 from MCP_dummy_Camara.tools.qod import create_qod_session, get_qod_session, delete_qod_session
 from dotenv import load_dotenv
-import os
 
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("MCP server")
