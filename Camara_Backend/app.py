@@ -8,4 +8,4 @@ if __name__ == "__main__":
     print("Starting  API server...")
     print("Swagger UI available at: http://localhost:8080/ui/")
  #   print("OpenAPI JSON available at: http://localhost:8080/openapi.json")
-    app.run(host="127.0.0.1", port=8080)
+    app.run(host="0.0.0.0", port=8080)

@@ -1,7 +1,8 @@
 import logging
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 from MCP_dummy_Camara.tools.qod import create_qod_session, get_qod_session, delete_qod_session
 from dotenv import load_dotenv
+import os
 
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("MCP server")
@@ -20,8 +21,10 @@ for tool in SAFE_TOOLS:
 
 if __name__ == "__main__":
     logger.info("Starting QoS MCP Server (proxy mode)...")
+    host = os.getenv("MCP_HOST", "127.0.0.1")
+    port = int(os.getenv("MCP_PORT", "8000"))
     try:
         # default IP:127.0.0.1 and port 8000
-        app.run(transport="streamable-http")
+        app.run(transport="streamable-http", host=host, port=port)
     except Exception as e:
         logger.critical("MCP server crashed: %s", e, exc_info=True)

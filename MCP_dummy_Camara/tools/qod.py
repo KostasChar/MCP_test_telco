@@ -28,10 +28,12 @@ async def create_qod_session(inp: CreateQoDSessionInput) -> QoDSessionMinimalRes
     """
 
     # Load JSON template
-    json_path = Path("json_templates/qod_request.json")
+    BASE_DIR = Path(__file__).parent.parent  # Directory of the parent of the current directory
+    json_path = BASE_DIR / "json_templates" / "qod_request.json"
+
     if not json_path.exists():
-        logger.error("Template file qod_request.json not found")
-        raise FileNotFoundError("qod_request.json not found")
+        logger.error(f"Template file {json_path} not found")
+        raise FileNotFoundError(f"{json_path} not found")
 
     with open(json_path, "r", encoding="utf-8") as f:
         template = json.load(f)
