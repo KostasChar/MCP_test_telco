@@ -1,6 +1,7 @@
 import logging
 from fastmcp import FastMCP
 from MCP_dummy_Camara.tools.qod import create_qod_session, get_qod_session, delete_qod_session
+from MCP_dummy_Camara.tools.edge_application import get_app_definitions
 from dotenv import load_dotenv
 import os
 
@@ -12,7 +13,7 @@ load_dotenv()
 
 
 # Register tools - only audited functions are exposed — no wildcard imports or dynamic inclusion.
-SAFE_TOOLS = [create_qod_session, get_qod_session, delete_qod_session]
+SAFE_TOOLS = [create_qod_session, get_qod_session, delete_qod_session, get_app_definitions]
 
 
 for tool in SAFE_TOOLS:

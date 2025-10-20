@@ -18,7 +18,7 @@ env_path = root_dir / ".env"
 # Load the .env file
 load_dotenv(dotenv_path=env_path)
 
-SESSION_SERVICE_URL = os.getenv("SESSION_SERVICE_URL")
+SESSION_SERVICE_URL = os.getenv("DUMMY_BACKEND_URL")
 if not SESSION_SERVICE_URL:
     raise EnvironmentError("SESSION_SERVICE_URL environment variable is not set")
 

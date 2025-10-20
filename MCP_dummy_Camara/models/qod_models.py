@@ -1,3 +1,5 @@
+from ipaddress import IPv6Address
+
 from pydantic import BaseModel, model_validator
 from typing import Optional, Dict, Any
 class IPv4Address(BaseModel):
@@ -8,14 +10,15 @@ class DeviceInput(BaseModel):
     phoneNumber: Optional[str] = None
     networkAccessIdentifier: Optional[str] = None
     ipv4Address: Optional[IPv4Address] = None
+    ipv6Address: Optional[IPv6Address] = None
 
     @model_validator(mode='before')
     @classmethod
     def check_one_identifier(cls, values):
         if isinstance(values, dict):
-            if not (values.get("phoneNumber") or values.get("networkAccessIdentifier") or values.get("ipv4Address")):
+            if not (values.get("phoneNumber") or values.get("networkAccessIdentifier") or values.get("ipv4Address")) or values.get("ipv6Address"):
                 raise ValueError(
-                    "Device must include at least one of: phoneNumber, networkAccessIdentifier, or ipv4Address"
+                    "Device must include at least one of: phoneNumber, networkAccessIdentifier, or ipv4Address or ipv6Address"
                 )
         return values
 
