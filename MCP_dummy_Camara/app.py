@@ -11,10 +11,8 @@ logger = logging.getLogger("MCP server")
 app = FastMCP("MCP Server")
 load_dotenv()
 
-
 # Register tools - only audited functions are exposed — no wildcard imports or dynamic inclusion.
 SAFE_TOOLS = [create_qod_session, get_qod_session, delete_qod_session, get_app_definitions]
-
 
 for tool in SAFE_TOOLS:
     app.tool()(tool)

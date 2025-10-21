@@ -22,10 +22,6 @@ def verify_device_location(body: Dict[str, Any]) -> tuple:
         if not device or not area:
             return {"status": 400, "code": "INVALID_ARGUMENT", "message": "Device and area required"}, 400
 
-        phone_number = device.get("phoneNumber")
-        if not phone_number:
-            return {"status": 400, "code": "INVALID_ARGUMENT", "message": "phoneNumber required"}, 400
-
         if area.get("areaType") != "CIRCLE":
             return {"status": 400, "code": "INVALID_ARGUMENT", "message": "Only CIRCLE areaType supported"}, 400
 
