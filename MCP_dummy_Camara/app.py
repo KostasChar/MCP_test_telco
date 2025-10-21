@@ -19,9 +19,8 @@ SAFE_TOOLS = [create_qod_session, get_qod_session, delete_qod_session, get_app_d
 for tool in SAFE_TOOLS:
     app.tool()(tool)
 
-
 if __name__ == "__main__":
-    logger.info("Starting QoS MCP Server (proxy mode)...")
+    logger.info("Starting MCP Server (proxy mode)...")
     host = os.getenv("MCP_HOST", "127.0.0.1")
     port = int(os.getenv("MCP_PORT", "8000"))
     try:
