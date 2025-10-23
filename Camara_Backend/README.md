@@ -7,7 +7,7 @@
 
 ## 🧩 Overview
 
-This repository contains a **dummy backend** implementation of a **CAMARA API**, used for testing, experimentation or integration demos.
+This repository contains a **dummy backend** implementation of  **CAMARA API endpoints**, used for testing, experimentation or integration demos.
 
 ---
 
@@ -42,39 +42,18 @@ This repository contains a **dummy backend** implementation of a **CAMARA API**,
 
 Follow these steps to set up and run the API locally.
 
-### 1. Clone the repository
 
-```bash
+```
 git clone https://github.com/your-username/dummy-camara-backend.git
 cd dummy-camara-backend
-```
-
-### 2. Create and activate a virtual environment
-
-```bash
 python3 -m venv venv
 source venv/bin/activate    # On Windows: venv\Scripts\activate
-```
-
-### 3. Install dependencies
-
-```bash
 pip install -r requirements.txt
-```
-
-### 4. Configure environment variables
-
 Create a `.env` file in the project root (if not already present) and set your API configuration:
-
-```
 API_HOST=127.0.0.1
 API_PORT=8081
-```
 
-### 5. Run the API server
-
-```bash
-python app.py
+python3 app.py
 ```
 
 For default values you should see:
