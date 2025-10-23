@@ -40,6 +40,8 @@ This repository contains a **dummy backend** implementation of  **CAMARA API end
 
 ## ⚙️ Installation
 
+### Option 1
+
 Follow these steps to set up and run the API locally.
 
 
@@ -52,20 +54,16 @@ pip install -r requirements.txt
 Create a `.env` file in the project root (if not already present) and set your API configuration:
 API_HOST=127.0.0.1
 API_PORT=8081
+```
 
+
+## 🚀 Usage
+
+### Option 1
+```
 python3 app.py
 ```
 
-For default values you should see:
-
-```
-Starting API server...
-Swagger UI available at: http://127.0.0.1:8081/ui/
-```
-
----
-
-## 🚀 Usage
 
 Once the server is running, open your browser and visit:
 
