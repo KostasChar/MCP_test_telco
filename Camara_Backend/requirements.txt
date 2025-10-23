@@ -1,2 +1,2 @@
-connexion==3.3.0
+connexion[swagger-ui,uvicorn]==3.3.0
 python-dotenv==1.1.1
