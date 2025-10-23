@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Dummy API for Camara experimentation
+  title: Dummy API for Camara experimental
   version: 1.0.0
 servers:
   - url: http://localhost:8080
@@ -9,7 +9,7 @@ paths:
   /sessions:
     post:
       summary: Create a new QoS session
-      operationId: controllers.qod_controller.create_session
+      operationId: controllers.experimental.qod_controller.create_session
       requestBody:
         required: true
         content:
@@ -84,12 +84,12 @@ paths:
                   phoneNumber: "+123456789"
                   networkAccessIdentifier: "123456789@domain.com"
                   ipv4Address: {
-                    "publicAddress": "203.0.113.0",
+                    "publicAddress": "203.0.113.1",
                     "publicPort": 59765
                      }
                   ipv6Address: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
                 applicationServer:
-                  ipv4Address: "198.51.100.0/24"
+                  ipv4Address: "198.51.100.1/24"
                   ipv6Address: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
                 devicePorts:
                   ranges: []
@@ -119,7 +119,7 @@ paths:
   /sessions/{sessionId}:
     get:
       summary: Get QoS session information
-      operationId: controllers.qod_controller.get_session
+      operationId: controllers.experimental.qod_controller.get_session
       parameters:
         - name: sessionId
           in: path
@@ -144,7 +144,7 @@ paths:
                 qosStatus: "AVAILABLE"
     delete:
       summary: Delete a QoS session
-      operationId: controllers.qod_controller.delete_session
+      operationId: controllers.experimental.qod_controller.delete_session
       parameters:
         - name: sessionId
           in: path
@@ -159,7 +159,7 @@ paths:
   /verify:
     post:
       summary: Verify if a device is within a specified area
-      operationId: controllers.verify_controller.verify_device_location
+      operationId: controllers.experimental.verify_controller.verify_device_location
       requestBody:
         required: true
         content:
