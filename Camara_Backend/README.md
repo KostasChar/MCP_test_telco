@@ -2,7 +2,6 @@
 ---
 
 # Dummy CAMARA API Backend
-# Random change  2
 
 
 ## 🧩 Overview
