@@ -46,7 +46,7 @@ Follow these steps to set up and run the API locally.
 ```
 git clone https://github.com/your-username/dummy-camara-backend.git
 cd dummy-camara-backend
-python3 -m venv venv
+python3 -m venv venv (Tested with python versions 3.10x and 3.12x)
 source venv/bin/activate    # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 Create a `.env` file in the project root (if not already present) and set your API configuration:
