@@ -87,15 +87,15 @@ All MCP tools are explicitly registered in `app.py` for safety and traceability:
 ## 🧩 Extending the Project
 
 To add a new tool:
-
-1. Define the tool in `tools/your_tool.py`.
-2. Decorate it with the `@app.tool()` decorator in `app.py`:
+1. Define Pydantic models for request, response data schema validation.
+2. Define the tool in `tools/your_tool.py`.
+3. Decorate it with the `@app.tool()` decorator in `app.py`:
 
    ```python
    from MCP_dummy_Camara.tools.your_tool import new_function
    app.tool()(new_function)
    ```
-3. Add corresponding models and JSON templates if needed.
+4. Add corresponding models and JSON templates if needed.
 
 ---
 
