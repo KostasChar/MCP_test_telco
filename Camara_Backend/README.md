@@ -4,7 +4,7 @@
 # Dummy CAMARA API Backend
 
 
-## 🧩 Overview
+##  Overview
 
 This repository contains a **dummy backend** implementation of  **CAMARA API endpoints**, used for testing, experimentation or integration demos.
 
@@ -23,6 +23,7 @@ This repository contains a **dummy backend** implementation of  **CAMARA API end
 ├── controllers/
 |   |   experimental/ 
 │   │   └── qod_controller.py
+│   │   └── retrieve_controller.py
 │   │   └── verify_controller.py
 │   ├── v1/
 │   │   └── example_controller.py
@@ -50,6 +51,7 @@ cd dummy-camara-backend
 python3 -m venv venv (Tested with python versions 3.10x and 3.12x)
 source venv/bin/activate    # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
+
 Create a `.env` file in the project root (if not already present) and set your API configuration:
 API_HOST=127.0.0.1
 API_PORT=8081

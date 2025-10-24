@@ -223,3 +223,63 @@ paths:
               example:
                 verificationResult: "TRUE"
                 lastLocationTime: "2023-09-07T10:40:52Z"
+
+  /retrieve:
+    post:
+      summary: Retrieve last known device location
+      operationId: controllers.experimental.retrieve_controller.retrieve_device_location
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - device
+                - maxAge
+              properties:
+                device:
+                  type: object
+                  required:
+                    - phoneNumber
+                  properties:
+                    phoneNumber:
+                      type: string
+                      example: "+123456789"
+                maxAge:
+                  type: integer
+                  example: 120
+      responses:
+        "200":
+          description: Successfully retrieved location
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lastLocationTime:
+                    type: string
+                    format: date-time
+                    example: "2023-10-17T13:18:23.682Z"
+                  area:
+                    type: object
+                    properties:
+                      areaType:
+                        type: string
+                        example: "CIRCLE"
+                      center:
+                        type: object
+                        properties:
+                          latitude:
+                            type: number
+                            example: 45.754114
+                          longitude:
+                            type: number
+                            example: 4.860374
+                      radius:
+                        type: number
+                        example: 800
+        "400":
+          description: Invalid input
+        "500":
+          description: Server error

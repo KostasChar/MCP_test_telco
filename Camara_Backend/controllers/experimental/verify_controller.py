@@ -11,7 +11,7 @@ class VerificationResult:
 
 def verify_device_location(body: Dict[str, Any]) -> tuple:
     """
-    POST /verify
+    POST /location_verify
     Verify if a device is within a specified area
     """
     try:
