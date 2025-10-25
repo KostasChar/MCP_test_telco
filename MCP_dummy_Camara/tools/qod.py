@@ -47,7 +47,7 @@ async def create_qod_session(inp: CreateQoDSessionInput) -> QoDSessionMinimalRes
     logger.debug("Final request payload: %s", json.dumps(template, indent=2))
 
     try:
-        response = requests.post(f"{SESSION_SERVICE_URL}/sessions", json=template, proxies={'http': None, 'https': None})
+        response = requests.post(f"{SESSION_SERVICE_URL}/sessions", json=template, proxies=None)
         response.raise_for_status()
     except requests.RequestException as e:
         logger.error("Failed to send request to session service: %s", e)
@@ -72,7 +72,7 @@ async def get_qod_session(inp: GetQoDSessionInput) -> QoDSessionFullResponse:
     logger.debug("Fetching session details from: %s", session_url)
 
     try:
-        response = requests.get(session_url, proxies={'http': None, 'https': None})
+        response = requests.get(session_url, proxies=None)
         response.raise_for_status()
     except requests.RequestException as e:
         logger.error("Failed to get session %s: %s", inp.sessionId, e)
@@ -105,7 +105,7 @@ async def delete_qod_session(inp: GetQoDSessionInput) -> str:
     logger.debug("Deleting session at: %s", session_url)
 
     try:
-        response = requests.delete(session_url, proxies={'http': None, 'https': None})
+        response = requests.delete(session_url, proxies=None)
         if response.status_code == 204:
             logger.info("Session %s deleted successfully", inp.sessionId)
             return "success"

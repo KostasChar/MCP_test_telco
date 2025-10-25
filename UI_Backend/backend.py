@@ -1,73 +1,80 @@
 import os
-from dotenv import load_dotenv
-from langchain_google_genai import ChatGoogleGenerativeAI
-from mcp_use import MCPAgent, MCPClient
-from quart import Quart, request, jsonify, Response
-from quart_cors import cors
 import json
 import asyncio
+from dotenv import load_dotenv
+from quart import Quart, request, jsonify, Response
+from quart_cors import cors
+from langchain_google_genai import ChatGoogleGenerativeAI
+from mcp_use import MCPAgent, MCPClient
 from gemini_mcp import agent as gemini_agent
-# Import Ollama agent (assumed to be configured similarly)
+
+# Optional Ollama agent
 try:
     from ollama_mcp import agent as ollama_agent
 except ImportError:
     ollama_agent = None
 
 
-
 # Quart app
 app = Quart(__name__)
 app = cors(app, allow_origin="*")
 
-# Helper function to create SSE formatted messages
-def format_sse(data: str, event: str = None) -> str:
-    msg = f"data: {data}\n"
-    if event:
-        msg = f"event: {event}\n{msg}"
-    return f"{msg}\n"
+
+# Helper: SSE-compliant message builder
+def sse_event(data: dict | str, event: str | None = None, id: int | None = None) -> str:
+    """Format a proper SSE event."""
+    msg = ""
+    if id is not None:
+        msg += f"id: {id}\n"
+    if event is not None:
+        msg += f"event: {event}\n"
+    # JSON-encode if it's a dict
+    if isinstance(data, (dict, list)):
+        data = json.dumps(data)
+    # According to SSE spec: each data line must start with "data:"
+    for line in str(data).splitlines():
+        msg += f"data: {line}\n"
+    msg += "\n"
+    return msg
 
 
-# Async generator for streaming responses
+# Streaming generator
 async def stream_agent_response(agent, query):
+    """Yields properly formatted SSE events."""
     try:
-        # Check if agent has astream method
-        if hasattr(agent, 'astream'):
-            # Stream the agent response
-            async for chunk in agent.astream(query):
-                # Handle different chunk formats
-                if hasattr(chunk, 'content'):
-                    yield format_sse(json.dumps({"chunk": chunk.content}))
-                elif isinstance(chunk, dict):
-                    yield format_sse(json.dumps({"chunk": chunk.get("output", str(chunk))}))
-                else:
-                    yield format_sse(json.dumps({"chunk": str(chunk)}))
+        event_id = 0
 
-                # Small delay to prevent overwhelming the client
+        if hasattr(agent, "astream"):
+            async for chunk in agent.astream(query):
+                if hasattr(chunk, "content"):
+                    payload = {"chunk": chunk.content}
+                elif isinstance(chunk, dict):
+                    payload = {"chunk": chunk.get("output", str(chunk))}
+                else:
+                    payload = {"chunk": str(chunk)}
+
+                yield sse_event(payload, event="message", id=event_id)
+                event_id += 1
                 await asyncio.sleep(0.01)
         else:
-            # Fallback: use run() and send as single chunk
+            # fallback: single full response
             result = await agent.run(query)
-            # Send result in small chunks to simulate streaming
-            chunk_size = 50
-            result_str = str(result)
-            for i in range(0, len(result_str), chunk_size):
-                chunk = result_str[i:i + chunk_size]
-                yield format_sse(json.dumps({"chunk": chunk}))
+            for i in range(0, len(result), 100):
+                yield sse_event({"chunk": result[i:i+100]}, event="message", id=event_id)
+                event_id += 1
                 await asyncio.sleep(0.05)
 
-        # Send completion signal
-        yield format_sse(json.dumps({"done": True}), event="complete")
+        yield sse_event({"done": True}, event="complete", id=event_id)
 
     except Exception as e:
-        yield format_sse(json.dumps({"error": str(e)}), event="error")
+        yield sse_event({"error": str(e)}, event="error")
 
 
-# Non-streaming endpoint (backwards compatible)
+# --- Non-streaming Gemini endpoint ---
 @app.route("/gemini-mcp", methods=["POST"])
-async def query_endpoint():
+async def gemini_query():
     data = await request.get_json()
     query = data.get("query")
-
     if not query:
         return jsonify({"error": "No query provided"}), 400
 
@@ -78,34 +85,33 @@ async def query_endpoint():
         return jsonify({"error": str(e)}), 500
 
 
-# Streaming endpoint for Gemini
+# --- Streaming Gemini endpoint ---
 @app.route("/gemini-mcp/stream", methods=["POST"])
-async def gemini_stream_endpoint():
+async def gemini_stream():
     data = await request.get_json()
     query = data.get("query")
-
     if not query:
         return jsonify({"error": "No query provided"}), 400
 
     return Response(
         stream_agent_response(gemini_agent, query),
-        mimetype="text/event-stream",
+        content_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
-            "X-Accel-Buffering": "no",
-        }
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",  # For NGINX compatibility
+        },
     )
 
 
-# Non-streaming Ollama endpoint (backwards compatible)
+# --- Non-streaming Ollama endpoint ---
 @app.route("/ollama-mcp", methods=["POST"])
-async def ollama_mcp_endpoint():
+async def ollama_query():
     if not ollama_agent:
         return jsonify({"error": "Ollama agent not available"}), 500
 
     data = await request.get_json()
     query = data.get("query")
-
     if not query:
         return jsonify({"error": "No query provided"}), 400
 
@@ -116,25 +122,25 @@ async def ollama_mcp_endpoint():
         return jsonify({"error": str(e)}), 500
 
 
-# Streaming endpoint for Ollama
+# --- Streaming Ollama endpoint ---
 @app.route("/ollama-mcp/stream", methods=["POST"])
-async def ollama_stream_endpoint():
+async def ollama_stream():
     if not ollama_agent:
         return jsonify({"error": "Ollama agent not available"}), 500
 
     data = await request.get_json()
     query = data.get("query")
-
     if not query:
         return jsonify({"error": "No query provided"}), 400
 
     return Response(
         stream_agent_response(ollama_agent, query),
-        mimetype="text/event-stream",
+        content_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
             "X-Accel-Buffering": "no",
-        }
+        },
     )
 
 

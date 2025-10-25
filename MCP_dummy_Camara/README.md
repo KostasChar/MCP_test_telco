@@ -22,6 +22,15 @@ MCP_dummy_Camara/
 │   ├── qod.py            # Quality of Delivery (QoD) related tools
 │   └── edge_application.py  # Edge application discovery tools
 ```
+---
+##  JSON Templates and Models
+
+* **`json_templates/`**: Contains CAMARA-compatible JSON structures that act as request/response templates.
+  These are dynamically **interpolated** using user input before being sent to the MCP or CAMARA endpoint.
+
+* **`models/`**: Contains **Pydantic models** that mirror CAMARA API specifications from
+  [CAMARA API to MCP Mapping](https://lf-camaraproject.atlassian.net/wiki/spaces/CAM/pages/222691579/CAMARA+API+to+MCP+Tool+Mapping).
+  If a CAMARA mapping doesn’t exist, **custom models** are defined.
 
 ---
 
@@ -71,16 +80,7 @@ All MCP tools are explicitly registered in `app.py` for safety and traceability:
 | `delete_qod_session`  | `tools/qod.py`              | Deletes an existing QoD session          |
 | `get_app_definitions` | `tools/edge_application.py` | Retrieves available edge app definitions |
 
----
 
-## 🧠 JSON Templates and Models
-
-* **`json_templates/`**: Contains CAMARA-compatible JSON structures that act as request/response templates.
-  These are dynamically **interpolated** using user input before being sent to the MCP or CAMARA endpoint.
-
-* **`models/`**: Contains **Pydantic models** that mirror CAMARA API specifications from
-  [CAMARA API to MCP Mapping](https://lf-camaraproject.atlassian.net/wiki/spaces/CAM/pages/222691579/CAMARA+API+to+MCP+Tool+Mapping).
-  If a CAMARA mapping doesn’t exist, **custom models** are defined to maintain schema integrity.
 
 ---
 
@@ -98,7 +98,8 @@ To add a new tool:
 4. Add corresponding models and JSON templates if needed.
 
 ---
-
+## Roadmap
+Extend the MCP server with relevant prompts, tool call(s), and more comprehensive parameter assertions.
 
 
 
