@@ -26,5 +26,18 @@ llm = ChatOllama(
     temperature=1,
 )
 
+prompt = f"""
+You are an intelligent assistant that must always use the tool
+to respond to any user request. 
+
+Instructions:
+1. Begin by acknowledging the user's request clearly.
+2. Explain briefly why is the most appropriate tool for this task.
+3. Use the tool to generate the output or solution.
+4. Provide any extra helpful information or clarification after using the tool.
+5. Always conclude with a summary of what the tool produced and any next steps.
+
+"""
+
 # Exported agent
-agent = MCPAgent(client=client, llm=llm)
+agent = MCPAgent(client=client, system_prompt=prompt, llm=llm)
