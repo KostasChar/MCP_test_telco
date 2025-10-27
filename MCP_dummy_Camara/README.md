@@ -19,7 +19,7 @@ MCP_dummy_Camara/
 ├── json_templates/       # CAMARA API request/response templates (interpolated by user input)
 ├── models/               # Pydantic models for CAMARA API compliance or custom types
 ├── tools/                # MCP tools registered as callable endpoints
-│   ├── qod.py            # Quality of Delivery (QoD) related tools
+│   ├── qod.py            # Quality of Demand (QoD) related tools
 │   └── edge_application.py  # Edge application discovery tools
 ```
 ---
@@ -69,7 +69,7 @@ By default, it  on `127.0.0.1:8000`.
 
 ---
 
-## 🧰 Registered Tools
+##  Registered Tools
 
 All MCP tools are explicitly registered in `app.py` for safety and traceability:
 
