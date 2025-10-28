@@ -8,7 +8,7 @@ from collections import defaultdict
 from datetime import datetime
 import pytz
 
-URL = "http://localhost:9009/debug/objgraph"
+URL = "http://127.0.0.1:9009/debug/objgraph"
 INTERVAL = 5  # seconds between polls
 LOG_FILE = "memory_monitor_log_greece.csv"
 
