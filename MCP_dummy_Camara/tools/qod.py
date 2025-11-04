@@ -5,6 +5,7 @@ from pathlib import Path
 from MCP_dummy_Camara.models.qod_models import *
 import os
 from dotenv import load_dotenv
+from typing import List
 
 ##
 # Configure logging
@@ -65,7 +66,7 @@ async def create_qod_session(inp: CreateQoDSessionInput) -> QoDSessionMinimalRes
 
 async def get_qod_session(inp: GetQoDSessionInput) -> QoDSessionFullResponse:
     """
-    Retrieves QoS session based on session id
+    Retrieves QoS session information based on session id
     """
 
     session_url = f"{SESSION_SERVICE_URL}/sessions/{inp.sessionId}"
@@ -120,3 +121,32 @@ async def delete_qod_session(inp: GetQoDSessionInput) -> str:
     except requests.RequestException as e:
         logger.error("Failed to delete session %s: %s", inp.sessionId, e)
 
+
+
+async def list_qod_sessions(inp: DeviceInput) -> list[str]:
+    """
+    Retrieves all QoS session IDs based on device input
+    """
+
+    sessions_url = f"{SESSION_SERVICE_URL}/retrieve-sessions"
+    payload = {"device": inp.model_dump(exclude_unset=True)}
+
+    if not payload["device"]:
+        raise ValueError("Device input must include at least one identifier")
+
+    logger.debug("Fetching QoS sessions with payload: %s", json.dumps(payload, indent=2))
+
+    try:
+        response = requests.post(sessions_url, json=payload)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        logger.error("Failed to retrieve QoS sessions: %s", e)
+        raise
+
+    resp_json = response.json()
+    logger.debug("List of sessions response: %s", json.dumps(resp_json, indent=2))
+
+    # Return only the sessionId strings
+    session_ids = [session.get("sessionId") for session in resp_json if "sessionId" in session]
+
+    return session_ids

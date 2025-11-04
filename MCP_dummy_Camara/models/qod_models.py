@@ -48,3 +48,7 @@ class QoDSessionFullResponse(BaseModel):
     qosStatus: str
     startedAt: Optional[str] = None
     expiresAt: Optional[str] = None
+
+
+class QoDSessionsList(BaseModel):
+    device: DeviceInput
