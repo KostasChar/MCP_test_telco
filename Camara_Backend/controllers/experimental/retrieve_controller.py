@@ -13,7 +13,7 @@ def retrieve_device_location(body):
         if not phone_number or not isinstance(max_age, int):
             return jsonify({"error": "Invalid request body"}), 400
 
-        # Dummy location response (replace with DB lookup or logic)
+        # Dummy location response (replace with DB lookup or transformation function)
         response = {
             "lastLocationTime": datetime.utcnow().isoformat() + "Z",
             "area": {
