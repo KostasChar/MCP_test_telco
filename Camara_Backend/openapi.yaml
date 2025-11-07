@@ -83,10 +83,9 @@ paths:
                 device:
                   phoneNumber: "+123456789"
                   networkAccessIdentifier: "123456789@domain.com"
-                  ipv4Address: {
-                    "publicAddress": "203.0.113.1",
-                    "publicPort": 59765
-                     }
+                  ipv4Address:
+                    publicAddress: "203.0.113.1"
+                    publicPort: 59765
                   ipv6Address: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
                 applicationServer:
                   ipv4Address: "198.51.100.1/24"
@@ -155,6 +154,111 @@ paths:
       responses:
         "204":
           description: Session deleted
+
+  /retrieve-sessions:
+    post:
+      summary: Retrieve QoS sessions for a specific device
+      operationId: controllers.experimental.qod_controller.retrieve_sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - device
+              properties:
+                device:
+                  type: object
+                  properties:
+                    phoneNumber:
+                      type: string
+                      nullable: true
+                    networkAccessIdentifier:
+                      type: string
+                      nullable: true
+                    ipv4Address:
+                      type: object
+                      nullable: true
+                      properties:
+                        publicAddress:
+                          type: string
+                        publicPort:
+                          type: integer
+                    ipv6Address:
+                      type: string
+                      nullable: true
+              example:
+                device:
+                  phoneNumber: "+123456789"
+                  networkAccessIdentifier: "123456789@domain.com"
+                  ipv4Address:
+                    publicAddress: "203.0.113.0"
+                    publicPort: 59765
+                  ipv6Address: "2001:db8:85a3:8d3:1319:8a2e:370:7344"
+      responses:
+        "200":
+          description: List of QoS sessions for the specified device
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    applicationServer:
+                      type: object
+                    qosProfile:
+                      type: string
+                    sink:
+                      type: string
+                    sessionId:
+                      type: string
+                      format: uuid
+                    duration:
+                      type: integer
+                    startedAt:
+                      type: string
+                      format: date-time
+                    expiresAt:
+                      type: string
+                      format: date-time
+                    qosStatus:
+                      type: string
+                      enum: [REQUESTED, AVAILABLE, UNAVAILABLE]
+              example:
+                - applicationServer: {}
+                  qosProfile: "QOS_L"
+                  sink: "https://application-server.com/notifications"
+                  sessionId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                  duration: 3600
+                  startedAt: "2024-06-01T12:00:00Z"
+                  expiresAt: "2024-06-01T13:00:00Z"
+                  qosStatus: "AVAILABLE"
+        "404":
+          description: No sessions found for the specified device
+          content:
+            application/json:
+              example:
+                status: 404
+                code: "NOT_FOUND"
+                message: "No sessions found for the specified device"
+        "422":
+          description: Missing or invalid fields
+          content:
+            application/json:
+              example:
+                status: 422
+                code: "MISSING_FIELD"
+                message: "Device field is required"
+        "400":
+          description: Invalid request format
+          content:
+            application/json:
+              example:
+                status: 400
+                code: "INVALID_ARGUMENT"
+                message: "Client specified an invalid argument"
 
   /verify:
     post:

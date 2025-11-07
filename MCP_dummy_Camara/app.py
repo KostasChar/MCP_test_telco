@@ -1,6 +1,6 @@
 import logging
 from fastmcp import FastMCP
-from MCP_dummy_Camara.tools.qod import create_qod_session, get_qod_session, delete_qod_session
+from MCP_dummy_Camara.tools.qod import create_qod_session, get_qod_session, delete_qod_session, list_qod_sessions
 from MCP_dummy_Camara.tools.edge_application import get_app_definitions
 from MCP_dummy_Camara.tools.location_verification import verify_device_location
 from dotenv import load_dotenv
@@ -12,8 +12,8 @@ logger = logging.getLogger("MCP server")
 app = FastMCP("MCP Server")
 load_dotenv()
 
-# Register tools - only audited functions are exposed — no wildcard imports or dynamic inclusion.
-SAFE_TOOLS = [create_qod_session, get_qod_session, delete_qod_session, get_app_definitions, verify_device_location]
+
+SAFE_TOOLS = [create_qod_session, get_qod_session, delete_qod_session, get_app_definitions, list_qod_sessions]
 
 for tool in SAFE_TOOLS:
     app.tool()(tool)
