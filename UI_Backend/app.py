@@ -81,10 +81,9 @@ async def gemini_query():
         await agent.close()
 
 
-@app.route("/gemini-mcp/stream", methods=["POST"])
+@app.route("/gemini-mcp/stream", methods=["GET"])
 async def gemini_stream():
-    data = await request.get_json()
-    query = data.get("query") if data else None
+    query = request.args.get("query")
     if not query:
         return jsonify({"error": "No query provided"}), 400
 
@@ -121,10 +120,9 @@ async def groq_query():
         await agent.close()
 
 
-@app.route("/groq-mcp/stream", methods=["POST"])
+@app.route("/groq-mcp/stream", methods=["GET"])
 async def groq_stream():
-    data = await request.get_json()
-    query = data.get("query") if data else None
+    query = request.args.get("query")
     if not query:
         return jsonify({"error": "No query provided"}), 400
 
@@ -168,5 +166,5 @@ async def debug_objgraph():
 
 if __name__ == "__main__":
     host = os.getenv("APP_HOST", "127.0.0.1")
-    port = int(os.getenv("APP_PORT", "9009"))
+    port = int(os.getenv("APP_PORT", "9013"))
     app.run(host=host, port=port, debug=False, use_reloader=False)

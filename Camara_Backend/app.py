@@ -7,7 +7,7 @@ load_dotenv()
 # Load environment variables with defaults
 
 HOST = os.getenv("API_HOST", "127.0.0.1")
-PORT = int(os.getenv("API_PORT", 8081))
+PORT = int(os.getenv("API_PORT", 8082))
 
 # Create Connexion app
 app = connexion.App(__name__, specification_dir="./")

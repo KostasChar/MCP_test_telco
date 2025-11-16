@@ -21,7 +21,7 @@ for tool in SAFE_TOOLS:
 if __name__ == "__main__":
     logger.info("Starting MCP Server (proxy mode)...")
     host = os.getenv("MCP_HOST", "127.0.0.1")
-    port = int(os.getenv("MCP_PORT", "8000"))
+    port = int(os.getenv("MCP_PORT", "8001"))
     try:
         # default IP:127.0.0.1 and port 8000
         app.run(transport="streamable-http", host=host, port=port)

@@ -11,7 +11,7 @@ async def create_gemini_agent():
     """Create an MCPAgent using Google Gemini backend."""
     MCP_SERVER_URL = os.getenv("MCP_SERVER_URL")
     GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-    MODEL_NAME = os.getenv("GEMINI_MODEL_NAME", "gemini-1.5-flash")
+    MODEL_NAME = os.getenv("GEMINI_MODEL_NAME", "gemini-2.5-flash")
 
     client = MCPClient({
         "mcpServers": {"http": {"url": MCP_SERVER_URL}}

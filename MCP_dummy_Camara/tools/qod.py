@@ -125,7 +125,7 @@ async def delete_qod_session(inp: GetQoDSessionInput) -> str:
 
 async def list_qod_sessions(inp: DeviceInput) -> list[str]:
     """
-    Retrieves all QoS session IDs based on device input
+    Retrieves all QoS session IDs based on user's device input
     """
 
     sessions_url = f"{SESSION_SERVICE_URL}/retrieve-sessions"
